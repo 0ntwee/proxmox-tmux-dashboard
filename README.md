@@ -14,7 +14,7 @@ Terminal-based monitoring dashboard for Proxmox servers using tmux.
 
 1. Clone repository:
 ```bash
-git clone https://github.com/yourusername/proxmox-tmux-dashboard.git
+git clone https://github.com/0ntwee/proxmox-tmux-dashboard.git
 cd proxmox-tmux-dashboard
 ```
 
