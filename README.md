@@ -1,47 +1,73 @@
 # Proxmox Tmux Dashboard
 
-![Dashboard Screenshot](./screenshot.png)
-
-A lightweight terminal dashboard for Proxmox clusters with tmux.
+Terminal-based monitoring dashboard for Proxmox servers using tmux.
 
 ## Features
 
 - Real-time system monitoring (htop)
-- Storage capacity overview
-- Container status tracking (LXC + Docker)
-- SSH terminal access
-- Auto-start configuration
+- Disk usage overview
+- Container status (LXC + Docker)
+- Direct SSH access
+- Auto-start capability
 
-## Quick Start
+## Installation
 
+1. Clone repository:
 ```bash
-# Clone repository
-git clone https://github.com/0ntwee/proxmox-tmux-dashboard.git
+git clone https://github.com/yourusername/proxmox-tmux-dashboard.git
 cd proxmox-tmux-dashboard
+```
 
-# Make script executable
-chmod +x src/dashboard.sh
-
-# Run dashboard
-./src/dashboard.sh
-
-**## Automatic Setup**
-# Run installation script
-sudo ./install.sh
-
-# Enable auto-start (for systemd)
-sudo systemctl enable proxmox-dashboard
-
-**## Configuration**
-
-Edit src/dashboard.sh to set your servers:
+2. Configure servers in `dashboard.sh`:
+```bash
 PROXMOX_SERVER="root@your_proxmox_ip"
 DOCKER_SERVER="root@your_docker_host_ip"
+```
 
-**## Requirements**
+3. Set up SSH keys:
+```bash
+ssh-copy-id root@your_proxmox_ip
+ssh-copy-id root@your_docker_host_ip
+```
 
-    tmux 3.0+
+4. Make executable:
+```bash
+chmod +x dashboard.sh
+```
 
-    SSH key authentication
+## Usage
 
-    Proxmox VE 7+
+Run manually:
+```bash
+./dashboard.sh
+```
+
+Enable auto-start:
+```bash
+sudo cp dashboard.service /etc/systemd/system/
+sudo systemctl enable --now dashboard.service
+```
+
+## Keys Controls
+
+| Shortcut    | Action               |
+|-------------|----------------------|
+| `Ctrl+B` → `↑↓←→` | Navigate panels    |
+| `Ctrl+B` → `d`    | Detach session     |
+| `tmux attach`     | Restore session    |
+
+## Requirements
+
+- tmux 3.0+
+- SSH access to servers
+- Proxmox VE 7+/Docker
+```
+
+This README provides:
+- Clear installation steps
+- Essential configuration
+- Basic usage instructions
+- Quick reference for controls
+- Clean markdown formatting
+
+Would you like me to add any specific details about the dashboard layout or monitoring capabilities?
