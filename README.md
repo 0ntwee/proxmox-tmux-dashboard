@@ -24,3 +24,24 @@ chmod +x src/dashboard.sh
 
 # Run dashboard
 ./src/dashboard.sh
+
+Automatic Setup
+# Run installation script
+sudo ./install.sh
+
+# Enable auto-start (for systemd)
+sudo systemctl enable proxmox-dashboard
+
+Configuration
+
+Edit src/dashboard.sh to set your servers:
+PROXMOX_SERVER="root@your_proxmox_ip"
+DOCKER_SERVER="root@your_docker_host_ip"
+
+Requirements
+
+    tmux 3.0+
+
+    SSH key authentication
+
+    Proxmox VE 7+
