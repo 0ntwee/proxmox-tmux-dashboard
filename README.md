@@ -62,12 +62,3 @@ sudo systemctl enable --now dashboard.service
 - SSH access to servers
 - Proxmox VE 7+/Docker
 ```
-
-This README provides:
-- Clear installation steps
-- Essential configuration
-- Basic usage instructions
-- Quick reference for controls
-- Clean markdown formatting
-
-Would you like me to add any specific details about the dashboard layout or monitoring capabilities?
