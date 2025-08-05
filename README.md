@@ -61,4 +61,3 @@ sudo systemctl enable --now dashboard.service
 - tmux 3.0+
 - SSH access to servers
 - Proxmox VE 7+/Docker
-```
