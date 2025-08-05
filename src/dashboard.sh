@@ -1,56 +1,58 @@
 #!/bin/bash
+# Proxmox Cluster Dashboard - tmux-based monitoring tool
 
-MAIN_SERVER="root@192.168.1.100"
+# Configuration
+PROXMOX_SERVER="root@192.168.1.100"
 DOCKER_SERVER="root@192.168.1.59"
 TERM="xterm-256color"
+SESSION_NAME="proxmox_dash"
 
-# Проверка на запуск внутри tmux
+# Check if running inside tmux
 if [ -n "$TMUX" ]; then
-    echo "Ошибка: Скрипт нужно запускать вне tmux!"
+    echo "Error: Must run outside tmux!" >&2
     exit 1
 fi
 
-# Удаляем старую сессию
-tmux kill-session -t proxmox_dash 2>/dev/null
+# Cleanup previous session
+tmux kill-session -t $SESSION_NAME 2>/dev/null
 
-# Создаем новую сессию
-tmux new-session -d -s proxmox_dash
+# Create new tmux session
+tmux new-session -d -s $SESSION_NAME
 tmux set -g pane-border-status top
 
-# Разделение экрана
+# Split layout (3 panes)
 tmux split-window -h
 tmux split-window -v -t 0
-tmux split-window -v -t 2
-#tmux split-window -h -t 3
 
-# Панель 0: htop (верхний левый)
-tmux send-keys -t 0 "ssh -t $MAIN_SERVER 'export TERM=$TERM; htop'" C-m
+# Panel 0: System Monitor (htop)
+tmux send-keys -t 0 "ssh -t $PROXMOX_SERVER 'export TERM=$TERM; htop'" C-m
 
-# Панель 1: Терминал (верхний правый)
-tmux send-keys -t 1 "ssh -t $MAIN_SERVER" C-m
+# Panel 1: Admin Terminal
+tmux send-keys -t 1 "ssh -t $PROXMOX_SERVER" C-m
 
-# Панель 2: Диски (нижний левый)
+# Panel 2: Storage Overview
 tmux send-keys -t 2 "watch -n 10 '
-echo \"=== Proxmox Disks ===\"
-ssh $MAIN_SERVER \"df -h --output=source,size,used,avail,pcent,target | grep -v tmpfs\"
-echo; echo \"=== Docker Host Disks ===\"
+echo \"=== Proxmox Storage ===\"
+ssh $PROXMOX_SERVER \"df -h --output=source,size,used,avail,pcent,target | grep -v tmpfs\"
+echo; echo \"=== Docker Host Storage ===\"
 ssh $DOCKER_SERVER \"df -h --output=source,size,used,avail,pcent,target | grep -v tmpfs\"'
 " C-m
 
-# Панель 3: Контейнеры (нижний правый верх)
+# Panel 3: Container Status (added later)
+tmux split-window -v -t 2
 tmux send-keys -t 3 "while true; do
   clear
-  echo \"=== Proxmox LXC ===\"
-  ssh $MAIN_SERVER 'pct list'
+  echo \"=== Proxmox LXC Containers ===\"
+  ssh $PROXMOX_SERVER 'pct list'
   echo; echo \"=== Docker Containers ===\"
   ssh $DOCKER_SERVER 'docker ps --format \"table {{.Names}}\t{{.Status}}\t{{.RunningFor}}\"'
   sleep 30
 done" C-m
 
-# Статус-бар (только время)
+# Status bar configuration
 tmux set -g status-style bg=default,fg=white
 tmux set -g status-right "#[fg=white]%H:%M:%S"
 tmux set -g status-left ""
 
-# Подключаемся к сессии
-tmux attach -t proxmox_dash
+# Attach to session
+tmux attach -t $SESSION_NAME
