@@ -16,7 +16,7 @@ A lightweight terminal dashboard for Proxmox clusters with tmux.
 
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/proxmox-tmux-dashboard.git
+git clone https://github.com/0ntwee/proxmox-tmux-dashboard.git
 cd proxmox-tmux-dashboard
 
 # Make script executable
